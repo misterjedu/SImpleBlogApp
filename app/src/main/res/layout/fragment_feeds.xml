@@ -37,37 +37,41 @@
 <!--    Search Box-->
     <EditText
         android:id="@+id/editTextTextPersonName"
-        android:layout_width="242dp"
+        android:layout_width="0dp"
         android:layout_height="46dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:autofillHints="@string/search"
         android:background="@drawable/input_corner_radius"
         android:breakStrategy="balanced"
+        android:drawableEnd="@drawable/ic_baseline_search_24"
         android:elevation="20dp"
         android:ems="10"
         android:hint="@string/search"
         android:inputType="textPersonName"
         android:paddingStart="20dp"
         android:paddingRight="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:drawableEnd="@drawable/ic_baseline_search_24"
-        android:autofillHints="@string/search" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 <!--    Filter Button-->
+
+    <!--    RecyclerView to display list of feeds-->
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:layout_marginStart="96dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="TODO"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
         app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName"
-        app:srcCompat="@drawable/ic_baseline_filter_list_24"
-        android:contentDescription="TODO" />
+        app:srcCompat="@drawable/ic_baseline_filter_list_24" />
 
-    <!--    RecyclerView to display list of feeds-->
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/post_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
@@ -76,6 +80,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName"
-        tools:listitem="@layout/single_post"
-        />
+        tools:listitem="@layout/single_post" />
 </androidx.constraintlayout.widget.ConstraintLayout>
