@@ -6,30 +6,30 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.misterjedu.simpleblogapp.api.RetrofitInstance.api
 import com.misterjedu.simpleblogapp.model.RetroPost
 import com.misterjedu.simpleblogapp.repository.Repository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
+import java.io.IOException
 
 
 class FeedsFragmentViewModel(private val repository: Repository) : ViewModel() {
 
     //Live Data of posts
-    val allPosts : MutableLiveData<Response<List<RetroPost>>> = MutableLiveData()
+    val allPosts: MutableLiveData<Response<List<RetroPost>>> = MutableLiveData()
 
     //Make Retrofit call to get posts
-    fun getAllPosts(){
-        viewModelScope.launch{
-            val response: Response<List<RetroPost>> = repository.getAllPosts()
-
-            if(response.isSuccessful){
+    fun getAllPosts() {
+        viewModelScope.launch {
+            try {
+                val response: Response<List<RetroPost>> = repository.getAllPosts()
                 allPosts.value = response
-            }else{
-                Log.d("Response", "No Internet Connection ")
+            } catch (e: IOException) {
+                Log.i("Response", "No internet Connection ")
             }
-
-
-
         }
     }
 }

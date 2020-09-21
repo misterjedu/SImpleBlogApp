@@ -42,7 +42,7 @@ class PostDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        Log.i("OnCreate", "ActivityCreated: Feeds ")
         //Get bundle items
         val bundle: Bundle? = this.arguments
         if (bundle !== null) {
@@ -64,7 +64,6 @@ class PostDetailFragment : Fragment() {
         Picasso.get()
             .load("https://source.unsplash.com/collection/${posts.imageId}")
             .into(detail_header_background)
-
 
         //Instantiate Repository
         val repository = Repository()
