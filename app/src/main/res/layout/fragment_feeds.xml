@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--    FAB to add new post-->
+    <!--    FAB to add new posObj-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_new_post_fab"
         android:layout_width="wrap_content"

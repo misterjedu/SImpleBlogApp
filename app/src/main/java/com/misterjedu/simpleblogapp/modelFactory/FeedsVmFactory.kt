@@ -2,12 +2,12 @@ package com.misterjedu.simpleblogapp.modelFactory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.misterjedu.simpleblogapp.repository.Repository
+import com.misterjedu.simpleblogapp.repository.IRepository
 
-class FeedsVmFactory(private val repository: Repository) : ViewModelProvider.Factory {
+class FeedsVmFactory(private val repository: IRepository) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return modelClass.getConstructor(Repository::class.java)
+        return modelClass.getConstructor(IRepository::class.java)
             .newInstance(repository)
     }
 

@@ -10,20 +10,20 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.misterjedu.simpleblogapp.R
 import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
+import com.misterjedu.simpleblogapp.repository.IRepository
 import com.misterjedu.simpleblogapp.repository.Repository
-import com.misterjedu.simpleblogapp.roomdata.RoomPost
-import com.misterjedu.simpleblogapp.roomdata.RoomPostViewModel
+import com.misterjedu.simpleblogapp.roomdata.Post
+import com.misterjedu.simpleblogapp.roomdata.PostDao
+import com.misterjedu.simpleblogapp.roomdata.PostDataBase
 import com.misterjedu.simpleblogapp.ui.adapters.PostRecyclerAdapter
-import com.misterjedu.simpleblogapp.ui.dataclasses.Post
+import com.misterjedu.simpleblogapp.ui.dataclasses.PostObj
 import com.misterjedu.simpleblogapp.ui.dialogs.AddNewPostDialog
 import com.misterjedu.simpleblogapp.viewmodel.FeedsFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_feeds.*
-import kotlinx.coroutines.InternalCoroutinesApi
 
 class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
 
@@ -33,35 +33,19 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
     private var adapter = PostRecyclerAdapter(this)
     private var isFragmentVisible = true
     private var isConnection = true
-
-    @InternalCoroutinesApi
-    private lateinit var roomPostViewModel: RoomPostViewModel
+    private lateinit var repository: IRepository
+    private lateinit var postDao: PostDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //Instantiate Repository
-        val repository = Repository()
-        val viewModelFactory = FeedsVmFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(
-            FeedsFragmentViewModel::class.java
-        )
-        viewModel.getAllPosts()
+
     }
 
-    @InternalCoroutinesApi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        roomPostViewModel = ViewModelProvider(this).get(RoomPostViewModel::class.java)
-
-        val post = RoomPost(1, 1, "Title 1", "Body1")
-        roomPostViewModel.addPost(post)
-
-
-        //If the fragment is in view, set fragment visibility to true
-        isFragmentVisible = true
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_feeds, container, false)
     }
@@ -69,6 +53,21 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.i("OnCreate", "ActivityCreated: Feeds ")
+
+        //Instantiate Repository
+        postDao = PostDataBase.getDatabase(requireContext()).postDao()
+        repository = Repository(postDao)
+        val viewModelFactory = FeedsVmFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(
+            FeedsFragmentViewModel::class.java
+        )
+
+        //Get all Posts from Both Api and DataBase
+        viewModel.getAllPosts()
+
+
+        //If the fragment is in view, set fragment visibility to true
+        isFragmentVisible = true
         //Get reference to add post FAB and set an onClickListener to open the AddComment Dialog
         addPostFab = add_new_post_fab
         addPostFab.setOnClickListener {
@@ -76,10 +75,10 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
             newPostDialog.show(activity?.supportFragmentManager!!, "Add Dialog")
         }
 
-        //initialize the Post recycler view adapter
+        //initialize the PostObj recycler view adapter
         post_recycler_view.adapter = adapter
 
-        //Observer Post Live Data Source
+        //Observer PostObj Live Data Source
         viewModel.allPosts.observe(requireActivity(), Observer { response ->
             if (response.isSuccessful) {
                 response.body()?.let {
@@ -95,8 +94,8 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
         })
     }
 
-    //OnClick of a post, open the comment fragment and pass the Post item as a bundle
-    override fun onItemClick(item: Post) {
+    //OnClick of a post, open the comment fragment and pass the PostObj item as a bundle
+    override fun onItemClick(item: PostObj) {
         val fragment = PostDetailFragment()
         val bundle = Bundle()
         bundle.putParcelable("posts", item)

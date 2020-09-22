@@ -121,7 +121,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-<!--    Single Post comments RecyclerView-->
+<!--    Single PostObj comments RecyclerView-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/comment_recycler_view"
         android:layout_width="match_parent"
@@ -129,7 +129,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/single_comment" />
 
-<!--    Edit text to write a post-->
+<!--    Edit text to write a posObj-->
     <EditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="match_parent"

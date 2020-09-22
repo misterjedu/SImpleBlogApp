@@ -2,7 +2,6 @@ package com.misterjedu.simpleblogapp.ui.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,8 +9,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.misterjedu.simpleblogapp.R
-import java.lang.ClassCastException
+import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
+import com.misterjedu.simpleblogapp.repository.IRepository
+import com.misterjedu.simpleblogapp.repository.Repository
+import com.misterjedu.simpleblogapp.roomdata.Post
+import com.misterjedu.simpleblogapp.roomdata.PostDao
+import com.misterjedu.simpleblogapp.roomdata.PostDataBase
+import com.misterjedu.simpleblogapp.viewmodel.FeedsFragmentViewModel
 
 
 class AddNewPostDialog : AppCompatDialogFragment() {
@@ -21,8 +27,9 @@ class AddNewPostDialog : AppCompatDialogFragment() {
     private lateinit var postBody: TextView
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
-
-    private lateinit var addPostDialogListener: AddPostDialogListener
+    private lateinit var viewModel: FeedsFragmentViewModel
+    private lateinit var repository: IRepository
+    private lateinit var postDao: PostDao
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -42,18 +49,22 @@ class AddNewPostDialog : AppCompatDialogFragment() {
         submitButton = view.findViewById(R.id.submit_post_button)
         cancelButton = view.findViewById(R.id.cancel_post_button)
 
-        /**
-         * Set Onclick Listeners
-         */
+        //Instantiate Repository
+        postDao = PostDataBase.getDatabase(requireContext()).postDao()
+        repository = Repository(postDao)
+        val viewModelFactory = FeedsVmFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(
+            FeedsFragmentViewModel::class.java
+        )
+
         submitButton.setOnClickListener {
             if (postBody.text.isEmpty() || postBody.text.isEmpty()) {
                 Toast.makeText(requireContext(), "Add a title and post", Toast.LENGTH_LONG).show()
             } else {
-
-                addPostDialogListener.dialogClick(
-                    postTitle.text.toString(),
-                    postBody.text.toString()
-                )
+                //Add Post to room
+                val post = Post(10, 10, postTitle.text.toString(), postBody.text.toString())
+                viewModel.addPost(post)
+                Toast.makeText(requireContext(), "Added to Room", Toast.LENGTH_SHORT).show()
                 dialog?.dismiss()
             }
         }
@@ -67,20 +78,4 @@ class AddNewPostDialog : AppCompatDialogFragment() {
         return builder.create()
     }
 
-    //Cast context as AddPostDialogListener
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            addPostDialogListener = context as AddPostDialogListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(
-                "$context must Implement AddPostDialogListener"
-            )
-        }
-    }
-
-    //Interface to communicate with Activity
-    interface AddPostDialogListener {
-        fun dialogClick(title: String, body: String)
-    }
 }

@@ -9,22 +9,23 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.misterjedu.simpleblogapp.R
-import com.misterjedu.simpleblogapp.model.RetroComment
 import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
 import com.misterjedu.simpleblogapp.repository.Repository
+import com.misterjedu.simpleblogapp.roomdata.PostDao
+import com.misterjedu.simpleblogapp.roomdata.PostDataBase
 import com.misterjedu.simpleblogapp.ui.adapters.CommentRecyclerAdapter
-import com.misterjedu.simpleblogapp.ui.dataclasses.Post
+import com.misterjedu.simpleblogapp.ui.dataclasses.PostObj
 import com.misterjedu.simpleblogapp.viewmodel.CommentsFragmentVieModel
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_feeds.*
 import kotlinx.android.synthetic.main.fragment_post_detail.*
 
 
 class PostDetailFragment : Fragment() {
 
-    private lateinit var posts: Post
+    private lateinit var posts: PostObj
     private lateinit var viewModel: CommentsFragmentVieModel
     private var adapter = CommentRecyclerAdapter()
+    private lateinit var postDao: PostDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,13 +61,14 @@ class PostDetailFragment : Fragment() {
             .load("https://picsum.photos/id/${posts.postId}/200/300")
             .into(detail_author_profile)
 
-        //Get Post Background Image
+        //Get PostObj Background Image
         Picasso.get()
             .load("https://source.unsplash.com/collection/${posts.imageId}")
             .into(detail_header_background)
 
         //Instantiate Repository
-        val repository = Repository()
+        postDao = PostDataBase.getDatabase(requireContext()).postDao()
+        val repository = Repository(postDao)
         val viewModelFactory = FeedsVmFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(
             CommentsFragmentVieModel::class.java
@@ -74,7 +76,7 @@ class PostDetailFragment : Fragment() {
 
         viewModel.getComments(posts.position.toString())
 
-        //initialize the Post recycler view adapter
+        //initialize the PostObj recycler view adapter
         comment_recycler_view.adapter = adapter
 
         //Observer Comment Live Data Source

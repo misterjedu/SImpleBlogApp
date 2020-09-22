@@ -11,8 +11,8 @@ import com.misterjedu.simpleblogapp.helpers.DateGenerator
 import com.misterjedu.simpleblogapp.helpers.NameGenerator
 import com.misterjedu.simpleblogapp.helpers.ReadTimeGenerator
 import com.misterjedu.simpleblogapp.helpers.TagGenerator
-import com.misterjedu.simpleblogapp.model.RetroPost
-import com.misterjedu.simpleblogapp.ui.dataclasses.Post
+import com.misterjedu.simpleblogapp.roomdata.Post
+import com.misterjedu.simpleblogapp.ui.dataclasses.PostObj
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_post.view.*
 import java.util.*
@@ -20,7 +20,7 @@ import java.util.*
 class PostRecyclerAdapter(
     private val clickListener: OnResultClickListener
 ) : RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
-    private var postList = mutableListOf<RetroPost>()
+    private var postList = mutableListOf<Post>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val postView = LayoutInflater.from(parent.context)
@@ -29,7 +29,7 @@ class PostRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        //Get current Post from the Array
+        //Get current PostObj from the Array
         holder.initialize(postList[position], clickListener)
     }
 
@@ -48,7 +48,7 @@ class PostRecyclerAdapter(
         private var postImage: ImageView = itemView.post_image
         private var readTime: TextView = itemView.post_read_time
 
-        fun initialize(item: RetroPost, action: OnResultClickListener) {
+        fun initialize(item: Post, action: OnResultClickListener) {
 
             //Generate names for the fields
             val userName = NameGenerator.getName()
@@ -57,7 +57,7 @@ class PostRecyclerAdapter(
             val readingTime = ReadTimeGenerator.getTime()
             val imageId = (Math.random() * 500).toInt()
 
-            //Set Post views
+            //Set PostObj views
             postAuthorName.text = userName
             postDate.text = postedDate
             postSummary.text = item.title.capitalize(Locale.ROOT)
@@ -74,8 +74,8 @@ class PostRecyclerAdapter(
                 .load("https://source.unsplash.com/collection/$imageId")
                 .into(postImage)
 
-            //Post Item to be passed from the Post Fragment to the Post Detail Fragment via Bundle
-            val postItem = Post(
+            //PostObj Item to be passed from the PostObj Fragment to the PostObj Detail Fragment via Bundle
+            val postItem = PostObj(
                 userName, postedDate, tag, readingTime,
                 imageId.toString(), adapterPosition,
                 item.title, item.body, item.id.toString()
@@ -90,15 +90,15 @@ class PostRecyclerAdapter(
     }
 
     //Method to set the array of posts
-    fun setPosts(post: List<RetroPost>) {
-        this.postList = post as MutableList<RetroPost>
+    fun setPosts(post: List<Post>) {
+        this.postList = post as MutableList<Post>
         notifyDataSetChanged()
     }
 
 
     //OnClick Listener InterfaceR
     interface OnResultClickListener {
-        fun onItemClick(item: Post)
+        fun onItemClick(item: PostObj)
     }
 
 }

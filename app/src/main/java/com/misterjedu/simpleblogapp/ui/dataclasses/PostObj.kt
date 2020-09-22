@@ -3,7 +3,7 @@ package com.misterjedu.simpleblogapp.ui.dataclasses
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Post(
+data class PostObj(
     val userName: String,
     val postedDate: String,
     val tag: String,
@@ -43,12 +43,12 @@ data class Post(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Post> {
-        override fun createFromParcel(parcel: Parcel): Post {
-            return Post(parcel)
+    companion object CREATOR : Parcelable.Creator<PostObj> {
+        override fun createFromParcel(parcel: Parcel): PostObj {
+            return PostObj(parcel)
         }
 
-        override fun newArray(size: Int): Array<Post?> {
+        override fun newArray(size: Int): Array<PostObj?> {
             return arrayOfNulls(size)
         }
     }

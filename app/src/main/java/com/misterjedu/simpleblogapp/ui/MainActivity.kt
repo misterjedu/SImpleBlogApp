@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.misterjedu.simpleblogapp.R
 import com.misterjedu.simpleblogapp.ui.dialogs.AddNewPostDialog
 
-class MainActivity : AppCompatActivity(), AddNewPostDialog.AddPostDialogListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var fragmentManager: FragmentManager
     private lateinit var fragmentTransaction: FragmentTransaction
 
@@ -23,10 +23,5 @@ class MainActivity : AppCompatActivity(), AddNewPostDialog.AddPostDialogListener
         fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.add(R.id.main_activity_frameLayout, fragment).addToBackStack(null)
             .commit()
-    }
-
-    //Implement the DialogClick Interface
-    override fun dialogClick(title: String, body: String) {
-        Toast.makeText(this, title, Toast.LENGTH_SHORT).show()
     }
 }
