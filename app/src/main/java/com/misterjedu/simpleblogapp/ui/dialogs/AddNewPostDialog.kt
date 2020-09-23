@@ -19,6 +19,8 @@ import com.misterjedu.simpleblogapp.roomModel.Post
 import com.misterjedu.simpleblogapp.roomModel.RoomDao
 import com.misterjedu.simpleblogapp.roomModel.DataBase
 import com.misterjedu.simpleblogapp.viewmodel.FeedsFragmentViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 
 
 class AddNewPostDialog : AppCompatDialogFragment() {
@@ -59,26 +61,31 @@ class AddNewPostDialog : AppCompatDialogFragment() {
             FeedsFragmentViewModel::class.java
         )
 
+
         //Add Post to room on Click
         submitButton.setOnClickListener {
-            if (postBody.text.isEmpty() || postBody.text.isEmpty()) {
-                Toast.makeText(requireContext(), "Add a title and post", Toast.LENGTH_LONG)
-                    .show()
-            } else {
-                val id = viewModel.getAllPostList() + 101
+            //Trigger the database to get all posts from database
+            viewModel.getAllPostList()
 
-                Log.i("Post Table size", id.toString())
+            //Observe the size of the database and add new post on incremented Id
+            viewModel._allRoomPostSize.observe(requireActivity(), {
+                val id = it + 101
+                if (postBody.text.isEmpty() || postBody.text.isEmpty()) {
+                    Toast.makeText(requireContext(), "Add a title and post", Toast.LENGTH_LONG)
+                        .show()
+                } else {
 
-                //Create New Post for room
-                val post =
-                    Post(11, id, postTitle.text.toString(), postBody.text.toString())
+                    val post =
+                        Post(11, id, postTitle.text.toString(), postBody.text.toString())
 
-                //Add new Post to room via the Repository
-                viewModel.addPost(post)
+                    //Add new Post to room via the Repository
+                    viewModel.addPost(post)
 
-                Toast.makeText(requireContext(), "Post Added to Room", Toast.LENGTH_SHORT).show()
-                dialog?.dismiss()
-            }
+                    Toast.makeText(requireContext(), "Post Added to Room", Toast.LENGTH_SHORT)
+                        .show()
+                    dialog?.dismiss()
+                }
+            })
         }
 
         //Close the Dialog when cancel button clicked

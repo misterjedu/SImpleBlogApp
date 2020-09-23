@@ -74,7 +74,7 @@ class PostRecyclerAdapter(
                 .load("https://source.unsplash.com/collection/$imageId")
                 .into(postImage)
 
-            //PostObj Item to be passed from the PostObj Fragment to the PostObj Detail Fragment via Bundle
+            //PostObj Item to be passed from the Post Fragment to the Details Fragment via Bundle
             val postItem = PostObj(
                 userName, postedDate, tag, readingTime,
                 imageId.toString(), adapterPosition,

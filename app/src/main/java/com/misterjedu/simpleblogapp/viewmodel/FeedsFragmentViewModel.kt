@@ -10,9 +10,11 @@ import com.misterjedu.simpleblogapp.roomModel.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.properties.Delegates
 
 
 class FeedsFragmentViewModel(private val repository: IRepository) : ViewModel() {
@@ -40,16 +42,20 @@ class FeedsFragmentViewModel(private val repository: IRepository) : ViewModel() 
         }
     }
 
+
     //Get Size of all posts in Room
-    fun getAllPostList(): Int {
-        var allRoomPosts = 0
-        viewModelScope.launch(Dispatchers.IO) {
+    var id: MutableLiveData<Int> = MutableLiveData()
+    val _allRoomPostSize: LiveData<Int>
+        get() = id
+    fun getAllPostList() {
+        viewModelScope.launch(IO) {
             val posts = repository.getAllPostList().size
-            withContext(Dispatchers.Main) {
-                allRoomPosts = posts
+            withContext(Main) {
+                Log.i("Room comment size", posts.toString())
+                id.value = posts
             }
         }
-        return allRoomPosts
+
     }
 
 
