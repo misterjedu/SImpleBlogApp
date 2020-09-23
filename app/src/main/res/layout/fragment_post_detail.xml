@@ -126,28 +126,59 @@
         android:id="@+id/comment_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="65dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/single_comment" />
 
-<!--    Edit text to write a posObj-->
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
+
+
+<!--    Edit text to write a Post to Room-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:autofillHints="Write a comment"
-        android:background="@drawable/input_corner_radius"
-        android:drawableEnd="@drawable/ic_baseline_send_24"
-        android:elevation="20dp"
-        android:ems="10"
-        android:hint="@string/write_a_comment"
-        android:inputType="textPersonName"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp" />
+        android:layout_gravity="bottom">
+
+        <EditText
+            android:id="@+id/comment_edit_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:autofillHints="Write a comment"
+            android:background="@drawable/input_corner_radius"
+            android:elevation="20dp"
+            android:ems="10"
+            android:hint="@string/write_a_comment"
+            android:inputType="textMultiLine|textPersonName"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/save_comment_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/save_comment_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/input_corner_radius"
+            android:clickable="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_baseline_send_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="#FFFFFF"
+            android:focusable="true" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

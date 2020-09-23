@@ -11,7 +11,7 @@ import com.misterjedu.simpleblogapp.helpers.DateGenerator
 import com.misterjedu.simpleblogapp.helpers.NameGenerator
 import com.misterjedu.simpleblogapp.helpers.ReadTimeGenerator
 import com.misterjedu.simpleblogapp.helpers.TagGenerator
-import com.misterjedu.simpleblogapp.roomdata.Post
+import com.misterjedu.simpleblogapp.roomModel.Post
 import com.misterjedu.simpleblogapp.ui.dataclasses.PostObj
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_post.view.*
@@ -92,7 +92,7 @@ class PostRecyclerAdapter(
     //Method to set the array of posts
     fun setPosts(post: List<Post>) {
         this.postList = post as MutableList<Post>
-        notifyDataSetChanged()
+        notifyItemInserted(0)
     }
 
 

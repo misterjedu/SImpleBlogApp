@@ -1,7 +1,6 @@
 package com.misterjedu.simpleblogapp.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +15,9 @@ import com.misterjedu.simpleblogapp.R
 import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
 import com.misterjedu.simpleblogapp.repository.IRepository
 import com.misterjedu.simpleblogapp.repository.Repository
-import com.misterjedu.simpleblogapp.roomdata.Post
-import com.misterjedu.simpleblogapp.roomdata.PostDao
-import com.misterjedu.simpleblogapp.roomdata.PostDataBase
+import com.misterjedu.simpleblogapp.roomModel.Post
+import com.misterjedu.simpleblogapp.roomModel.RoomDao
+import com.misterjedu.simpleblogapp.roomModel.DataBase
 import com.misterjedu.simpleblogapp.ui.adapters.PostRecyclerAdapter
 import com.misterjedu.simpleblogapp.ui.dataclasses.PostObj
 import com.misterjedu.simpleblogapp.ui.dialogs.AddNewPostDialog
@@ -34,7 +33,7 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
     private var isFragmentVisible = true
     private var isConnection = true
     private lateinit var repository: IRepository
-    private lateinit var postDao: PostDao
+    private lateinit var roomDao: RoomDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +51,13 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.i("OnCreate", "ActivityCreated: Feeds ")
+
+        //If the fragment is in view, set fragment visibility to true
+        isFragmentVisible = true
 
         //Instantiate Repository
-        postDao = PostDataBase.getDatabase(requireContext()).postDao()
-        repository = Repository(postDao)
+        roomDao = DataBase.getPostDatabase(requireContext()).postDao()
+        repository = Repository(roomDao)
         val viewModelFactory = FeedsVmFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(
             FeedsFragmentViewModel::class.java
@@ -65,9 +66,20 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
         //Get all Posts from Both Api and DataBase
         viewModel.getAllPosts()
 
+        //initialize the PostObj recycler view adapter
+        post_recycler_view.adapter = adapter
 
-        //If the fragment is in view, set fragment visibility to true
-        isFragmentVisible = true
+        //Observer PostObj Live Data Source
+        viewModel.combinedPostsData()?.observe(requireActivity(), Observer { response ->
+            response.let {
+                val combinedPosts: List<Post> = it.second + it.first
+                adapter.setPosts(combinedPosts)
+                //Define Layout manager
+                post_recycler_view.layoutManager = LinearLayoutManager(requireContext())
+            }
+        })
+
+
         //Get reference to add post FAB and set an onClickListener to open the AddComment Dialog
         addPostFab = add_new_post_fab
         addPostFab.setOnClickListener {
@@ -75,23 +87,9 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
             newPostDialog.show(activity?.supportFragmentManager!!, "Add Dialog")
         }
 
-        //initialize the PostObj recycler view adapter
-        post_recycler_view.adapter = adapter
-
-        //Observer PostObj Live Data Source
-        viewModel.allPosts.observe(requireActivity(), Observer { response ->
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    adapter.setPosts(it)
-                }
-
-                //Define Layout manager
-                post_recycler_view.layoutManager = LinearLayoutManager(requireContext())
-
-            } else {
-                Log.i("Response", response.errorBody().toString())
-            }
-        })
+        post_filter_button.setOnClickListener {
+            viewModel.deleteAllPosts()
+        }
     }
 
     //OnClick of a post, open the comment fragment and pass the PostObj item as a bundle

@@ -51,7 +51,8 @@
         android:inputType="textPersonName"
         android:paddingStart="20dp"
         android:paddingRight="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        android:textColorHint="#FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/post_filter_button"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -60,7 +61,7 @@
     <!--    RecyclerView to display list of feeds-->
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/post_filter_button"
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_marginTop="4dp"

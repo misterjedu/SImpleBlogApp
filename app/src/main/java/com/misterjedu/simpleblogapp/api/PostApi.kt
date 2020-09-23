@@ -1,7 +1,7 @@
 package com.misterjedu.simpleblogapp.api
 
-import com.misterjedu.simpleblogapp.model.RetroComment
-import com.misterjedu.simpleblogapp.roomdata.Post
+import com.misterjedu.simpleblogapp.roomModel.Comment
+import com.misterjedu.simpleblogapp.roomModel.Post
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -12,7 +12,7 @@ interface PostApi {
     @GET("posts/{id}/comments")
     suspend fun getComments(
         @Path("id") id: String,
-    ): Response<List<RetroComment>>
+    ): Response<List<Comment>>
 
 
     //Get all Posts

@@ -7,8 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.misterjedu.simpleblogapp.R
-import com.misterjedu.simpleblogapp.model.RetroComment
-import com.misterjedu.simpleblogapp.ui.dataclasses.Comment
+import com.misterjedu.simpleblogapp.roomModel.Comment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_comment.view.*
 
@@ -16,7 +15,7 @@ class CommentRecyclerAdapter() :
     RecyclerView.Adapter<CommentRecyclerAdapter.CommentViewHolder>() {
 
     //ArrayList of comments
-    private var comments = listOf<RetroComment>()
+    private var comments = listOf<Comment>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         val commentView = LayoutInflater.from(parent.context)
@@ -34,7 +33,7 @@ class CommentRecyclerAdapter() :
 
 
     //Call this method to pass in an array of comments
-    fun setComment(comments: List<RetroComment>) {
+    fun setComment(comments: List<Comment>) {
         this.comments = comments
         notifyDataSetChanged()
     }
@@ -46,7 +45,7 @@ class CommentRecyclerAdapter() :
         private var commentDate: TextView = itemView.comment_date
         private var commentBody: TextView = itemView.comment_body
 
-        fun initialize(item: RetroComment) {
+        fun initialize(item: Comment) {
             commentAuthorName.text = item.name
             commentBody.text = item.body
 //            commentDate.text = item.date

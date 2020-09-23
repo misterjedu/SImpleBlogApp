@@ -3,6 +3,7 @@ package com.misterjedu.simpleblogapp.ui.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -14,9 +15,9 @@ import com.misterjedu.simpleblogapp.R
 import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
 import com.misterjedu.simpleblogapp.repository.IRepository
 import com.misterjedu.simpleblogapp.repository.Repository
-import com.misterjedu.simpleblogapp.roomdata.Post
-import com.misterjedu.simpleblogapp.roomdata.PostDao
-import com.misterjedu.simpleblogapp.roomdata.PostDataBase
+import com.misterjedu.simpleblogapp.roomModel.Post
+import com.misterjedu.simpleblogapp.roomModel.RoomDao
+import com.misterjedu.simpleblogapp.roomModel.DataBase
 import com.misterjedu.simpleblogapp.viewmodel.FeedsFragmentViewModel
 
 
@@ -29,7 +30,8 @@ class AddNewPostDialog : AppCompatDialogFragment() {
     private lateinit var cancelButton: Button
     private lateinit var viewModel: FeedsFragmentViewModel
     private lateinit var repository: IRepository
-    private lateinit var postDao: PostDao
+    private lateinit var roomDao: RoomDao
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -50,21 +52,31 @@ class AddNewPostDialog : AppCompatDialogFragment() {
         cancelButton = view.findViewById(R.id.cancel_post_button)
 
         //Instantiate Repository
-        postDao = PostDataBase.getDatabase(requireContext()).postDao()
-        repository = Repository(postDao)
+        roomDao = DataBase.getPostDatabase(requireContext()).postDao()
+        repository = Repository(roomDao)
         val viewModelFactory = FeedsVmFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(
             FeedsFragmentViewModel::class.java
         )
 
+        //Add Post to room on Click
         submitButton.setOnClickListener {
             if (postBody.text.isEmpty() || postBody.text.isEmpty()) {
-                Toast.makeText(requireContext(), "Add a title and post", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Add a title and post", Toast.LENGTH_LONG)
+                    .show()
             } else {
-                //Add Post to room
-                val post = Post(10, 10, postTitle.text.toString(), postBody.text.toString())
+                val id = viewModel.getAllPostList() + 101
+
+                Log.i("Post Table size", id.toString())
+
+                //Create New Post for room
+                val post =
+                    Post(11, id, postTitle.text.toString(), postBody.text.toString())
+
+                //Add new Post to room via the Repository
                 viewModel.addPost(post)
-                Toast.makeText(requireContext(), "Added to Room", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(requireContext(), "Post Added to Room", Toast.LENGTH_SHORT).show()
                 dialog?.dismiss()
             }
         }
