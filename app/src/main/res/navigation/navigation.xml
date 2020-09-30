@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/feedsFragment">
+
+    <fragment
+        android:id="@+id/feedsFragment"
+        android:name="com.misterjedu.simpleblogapp.ui.FeedsFragment"
+        android:label="FeedsFragment"
+        tools:layout="@layout/fragment_feeds">
+        <action
+            android:id="@+id/action_feedsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="com.misterjedu.simpleblogapp.ui.PostDetailFragment"
+        android:label="PostDetailFragment"
+        tools:layout="@layout/fragment_post_detail" >
+        <argument
+            android:name="post"
+            app:argType="com.misterjedu.simpleblogapp.ui.dataclasses.PostObj"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_addCommentFragment"
+            app:destination="@id/addCommentFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addCommentFragment"
+        android:name="com.misterjedu.simpleblogapp.ui.AddCommentFragment"
+        android:label="fragment_add_comment"
+        tools:layout="@layout/fragment_add_comment" >
+        <argument
+            android:name="postId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+</navigation>

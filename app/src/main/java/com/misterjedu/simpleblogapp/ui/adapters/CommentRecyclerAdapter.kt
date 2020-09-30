@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.misterjedu.simpleblogapp.R
+import com.misterjedu.simpleblogapp.databinding.SingleCommentBinding
+import com.misterjedu.simpleblogapp.helpers.DateGenerator
 import com.misterjedu.simpleblogapp.roomModel.Comment
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.single_comment.view.*
@@ -18,10 +20,11 @@ class CommentRecyclerAdapter() :
     private var comments = listOf<Comment>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val commentView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.single_comment, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
 
-        return CommentViewHolder(commentView)
+        val binding = SingleCommentBinding.inflate(layoutInflater, parent, false)
+
+        return CommentViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
@@ -39,16 +42,16 @@ class CommentRecyclerAdapter() :
     }
 
     //Comment ViewHolder Class
-    class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var commentAuthorImage: ImageView = itemView.comment_profile_image
-        private var commentAuthorName: TextView = itemView.comment_author_name
-        private var commentDate: TextView = itemView.comment_date
-        private var commentBody: TextView = itemView.comment_body
+    class CommentViewHolder(private val binding: SingleCommentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        private var commentAuthorImage = binding.commentProfileImage
+        private val postedDate = DateGenerator.getPostDate()
 
+        //Bind View to data
         fun initialize(item: Comment) {
-            commentAuthorName.text = item.name
-            commentBody.text = item.body
-//            commentDate.text = item.date
+            binding.commentAuthorName.text = item.name
+            binding.commentDate.text = item.body
+            binding.commentDate.text = postedDate
 
             //Fetch Random User Image from randomuser.me using Picasso
             Picasso.get()
@@ -56,7 +59,4 @@ class CommentRecyclerAdapter() :
                 .into(commentAuthorImage)
         }
     }
-
-
-
 }

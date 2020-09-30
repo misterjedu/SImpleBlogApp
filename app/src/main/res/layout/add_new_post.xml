@@ -1,101 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/add_new_post"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="40dp"
-    android:paddingTop="20dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    >
+    <data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView4"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    </data>
 
-        <ImageView
-            android:id="@+id/add_author_image"
-            android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/add_new_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="40dp">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView4"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/add_author_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sample_image"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/add_post_title"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:autofillHints="Post Title"
+            android:background="@drawable/edit_text_curve"
+            android:elevation="3dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/post_title"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardView4"
+            app:layout_constraintTop_toTopOf="@+id/cardView4" />
+
+        <EditText
+            android:id="@+id/add_post_body"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="40dp"
+            android:autofillHints="Post Body"
+            android:background="@drawable/edit_text_curve"
+            android:elevation="3dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/post_body"
+            android:inputType="textMultiLine"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/add_post_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardView4"
+            app:layout_constraintTop_toBottomOf="@+id/add_post_title" />
+
+        <Button
+            android:id="@+id/submit_post_button"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:background="@drawable/sample_image"
-            />
-    </androidx.cardview.widget.CardView>
+            android:layout_marginTop="28dp"
+            android:background="#4B2492"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/add_post_body"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/add_post_body"
+            app:layout_constraintTop_toBottomOf="@+id/add_post_body" />
 
-    <EditText
-        android:id="@+id/add_post_title"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:autofillHints="Post Title"
-        android:background="@drawable/edit_text_curve"
-        android:elevation="3dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/post_title"
-        android:inputType="textMultiLine"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/cardView4"
-        app:layout_constraintTop_toTopOf="@+id/cardView4" />
+        <Button
+            android:id="@+id/cancel_post_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#F44336"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/add_post_body"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/add_post_body"
+            app:layout_constraintTop_toBottomOf="@+id/submit_post_button" />
 
-    <EditText
-        android:id="@+id/add_post_body"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="40dp"
-        android:autofillHints="Post Body"
-        android:background="@drawable/edit_text_curve"
-        android:elevation="3dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="@string/post_body"
-        android:inputType="textMultiLine"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="@+id/add_post_title"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/cardView4"
-        app:layout_constraintTop_toBottomOf="@+id/add_post_title" />
-
-    <Button
-        android:id="@+id/submit_post_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:background="#09B859"
-        android:text="Submit"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/add_post_body"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/add_post_body"
-        app:layout_constraintTop_toBottomOf="@+id/add_post_body" />
-
-    <Button
-        android:id="@+id/cancel_post_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:background="#F44336"
-        android:text="Cancel"
-        android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/add_post_body"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/add_post_body"
-        app:layout_constraintTop_toBottomOf="@+id/submit_post_button" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -10,18 +10,8 @@ import com.misterjedu.simpleblogapp.R
 import com.misterjedu.simpleblogapp.ui.dialogs.AddNewPostDialog
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var fragmentManager: FragmentManager
-    private lateinit var fragmentTransaction: FragmentTransaction
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        fragmentManager = supportFragmentManager
-        val fragment: Fragment = FeedsFragment()
-
-        fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.main_activity_frameLayout, fragment).addToBackStack(null)
-            .commit()
     }
 }

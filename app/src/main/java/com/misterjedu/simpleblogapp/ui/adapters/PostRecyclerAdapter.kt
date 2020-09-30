@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.misterjedu.simpleblogapp.R
+import com.misterjedu.simpleblogapp.databinding.SinglePostBinding
 import com.misterjedu.simpleblogapp.helpers.DateGenerator
 import com.misterjedu.simpleblogapp.helpers.NameGenerator
 import com.misterjedu.simpleblogapp.helpers.ReadTimeGenerator
@@ -22,10 +23,11 @@ class PostRecyclerAdapter(
 ) : RecyclerView.Adapter<PostRecyclerAdapter.PostViewHolder>() {
     private var postList = mutableListOf<Post>()
 
+    //Bind Single Post view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val postView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.single_post, parent, false)
-        return PostViewHolder(postView)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = SinglePostBinding.inflate(layoutInflater, parent, false)
+        return PostViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -37,17 +39,15 @@ class PostRecyclerAdapter(
 
 
     //Comment ViewHolder Class
-    class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//    class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PostViewHolder(private val binding: SinglePostBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         //Get reference to the views
-        private var postAuthorImage: ImageView = itemView.post_author_image
-        private var postAuthorName: TextView = itemView.post_author_name
-        private var postDate: TextView = itemView.post_date
-        private var postSummary: TextView = itemView.post_summary
-        private var postTag: TextView = itemView.post_tag
-        private var postImage: ImageView = itemView.post_image
-        private var readTime: TextView = itemView.post_read_time
+        private var postAuthorImage: ImageView = binding.postAuthorImage
+        private var postImage: ImageView = binding.postImage
 
+        //Bind View to data
         fun initialize(item: Post, action: OnResultClickListener) {
 
             //Generate names for the fields
@@ -58,11 +58,11 @@ class PostRecyclerAdapter(
             val imageId = (Math.random() * 500).toInt()
 
             //Set PostObj views
-            postAuthorName.text = userName
-            postDate.text = postedDate
-            postSummary.text = item.title.capitalize(Locale.ROOT)
-            postTag.text = tag
-            readTime.text = readingTime
+            binding.postAuthorName.text = userName
+            binding.postDate.text = userName
+            binding.postSummary.text = item.title.capitalize(Locale.ROOT)
+            binding.postTag.text = tag
+            binding.postReadTime.text = readingTime
 
             //Load Author Image from randomuser.me
             Picasso.get()
@@ -83,7 +83,7 @@ class PostRecyclerAdapter(
 
             //Onclick Listener for the interface
             itemView.setOnClickListener {
-                action.onItemClick(postItem)
+                action.onItemClick(it, postItem)
             }
 
         }
@@ -95,10 +95,9 @@ class PostRecyclerAdapter(
         notifyItemInserted(0)
     }
 
-
     //OnClick Listener InterfaceR
     interface OnResultClickListener {
-        fun onItemClick(item: PostObj)
+        fun onItemClick(view: View, item: PostObj)
     }
 
 }

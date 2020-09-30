@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.misterjedu.simpleblogapp.R
@@ -28,7 +29,6 @@ class PostDetailFragment : Fragment() {
 
     private lateinit var posts: PostObj
     private lateinit var addCommentView: EditText
-    private lateinit var addCommentButton: ImageView
     private lateinit var viewModel: CommentsFragmentVieModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CommentRecyclerAdapter
@@ -44,36 +44,32 @@ class PostDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val args = arguments?.let { PostDetailFragmentArgs.fromBundle(it) }
+        if (args != null) {
+            posts = args.post!!
+        }
+
         return inflater.inflate(R.layout.fragment_post_detail, container, false)
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //Get bundle items
-        val bundle: Bundle? = this.arguments
-        if (bundle !== null) {
-            posts = bundle.getParcelable("posts")!!
-        }
 
-
-//        adapter = CommentRecyclerAdapter()
+        //Set Post Id
+        postId = posts.postId.toInt()
 
         // Inflate the layout for this fragment
         recyclerView = comment_recycler_view
 
-        //Get Reference to Edit TextView and Send Add Comment Button
+        //Get Reference to Edit TextView
         addCommentView = comment_edit_text_view
-        addCommentButton = save_comment_button
 
         //Set Value of all views
         detail_tag.text = posts.tag
         detail_author_name.text = posts.userName
         detail_date.text = posts.postedDate
         detail_post_body.text = posts.postBody
-
-        //Set Value of Post postId
-        postId = posts.postId.toInt()
 
         //Get Author Profile Image
         Picasso.get()
@@ -93,24 +89,8 @@ class PostDetailFragment : Fragment() {
             CommentsFragmentVieModel::class.java
         )
 
-        //Get Comments from Api and Room
         viewModel.getComments(posts.position.toString())
         viewModel.getRoomComments(postId)
-
-        //Add Comment to Rppm Database
-        addCommentButton.setOnClickListener {
-            val commentAdded: String = addCommentView.text.toString()
-            val comment = Comment(
-                postId, 0, "Mister Jedu",
-                "misterjedu.com", commentAdded
-            )
-            viewModel.addComment(comment)
-
-            addCommentView.clearFocus()
-            addCommentView.setText("")
-            Toast.makeText(requireContext(), "Comment Added", Toast.LENGTH_SHORT).show()
-        }
-
 
         //initialize the PostObj recycler view adapter
         adapter = CommentRecyclerAdapter()
@@ -118,16 +98,24 @@ class PostDetailFragment : Fragment() {
 
         //Observer Comment Live Data Source
         viewModel.combinedCommentsData()?.observe(requireActivity(), { response ->
-
             response?.let {
                 val combinedComments = response.second + response.first
                 adapter.setComment(combinedComments)
-
             }
         })
 
         //Define Layout manager
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+
+        //Set onclick listener on edit text to open the add comment fragment
+        comment_edit_text_view.setOnClickListener {
+            val action = PostDetailFragmentDirections
+                .actionPostDetailFragmentToAddCommentFragment()
+                .setPostId(posts.postId.toInt())
+            it.findNavController().navigate(action)
+        }
+
 
     }
 }

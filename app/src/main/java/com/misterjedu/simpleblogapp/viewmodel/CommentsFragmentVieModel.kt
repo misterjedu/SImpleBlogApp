@@ -38,13 +38,6 @@ class CommentsFragmentVieModel(private val repository: IRepository) : ViewModel(
         }
     }
 
-    //Delete Posts from Room
-    fun deleteAllComments() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAllComment()
-        }
-    }
-
 
     //Make Retrofit call to get posts
     fun getComments(id: String) {

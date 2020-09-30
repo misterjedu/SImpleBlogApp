@@ -5,13 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.misterjedu.simpleblogapp.R
+import com.misterjedu.simpleblogapp.databinding.FragmentFeedsBinding
 import com.misterjedu.simpleblogapp.modelFactory.FeedsVmFactory
 import com.misterjedu.simpleblogapp.repository.IRepository
 import com.misterjedu.simpleblogapp.repository.Repository
@@ -34,6 +35,7 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
     private var isConnection = true
     private lateinit var repository: IRepository
     private lateinit var roomDao: RoomDao
+    private lateinit var binding: FragmentFeedsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +47,9 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feeds, container, false)
+        // Inflate the layout for this fragment with binding
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_feeds, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -93,21 +96,13 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
     }
 
     //OnClick of a post, open the comment fragment and pass the PostObj item as a bundle
-    override fun onItemClick(item: PostObj) {
-        val fragment = PostDetailFragment()
-        val bundle = Bundle()
-        bundle.putParcelable("posts", item)
-        fragment.arguments = bundle
-        loadCommentFragment(fragment)
+    override fun onItemClick(view: View, item: PostObj) {
+        val action = FeedsFragmentDirections
+            .actionFeedsFragmentToPostDetailFragment()
+            .setPost(item)
+        view.findNavController().navigate(action)
     }
 
-    //Launch the comment fragment
-    private fun loadCommentFragment(fragment: Fragment) {
-        val fragmentManager: FragmentManager = activity!!.supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.main_activity_frameLayout, fragment, "tag")
-            .addToBackStack(null).commit()
-    }
 
     //override OnStop LifeCycle,  the fragment is not in view. Set fragment visibility to false
     //If, set fragment visibility to false
@@ -119,17 +114,3 @@ class FeedsFragment : Fragment(), PostRecyclerAdapter.OnResultClickListener {
 }
 
 
-//Change Page based on internet connection
-//        val networkConnection = NetWorkConnection(activity?.applicationContext!!)
-//        networkConnection.observe(requireActivity(), {
-//            if (isFragmentVisible) {
-//                if(it){
-//                   isConnection = true
-//                    viewModel.getAllPosts()
-//                    Toast.makeText(requireContext(), isConnection.toString(), Toast.LENGTH_SHORT).show()
-//                }else{
-//                   isConnection = false
-//                    Toast.makeText(requireContext(), isConnection.toString(), Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })

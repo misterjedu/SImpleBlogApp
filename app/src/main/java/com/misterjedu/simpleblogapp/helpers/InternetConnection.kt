@@ -116,3 +116,19 @@ class NetWorkConnection(private val context: Context) : LiveData<Boolean>() {
     }
 
 }
+
+
+//Change Page based on internet connection
+//        val networkConnection = NetWorkConnection(activity?.applicationContext!!)
+//        networkConnection.observe(requireActivity(), {
+//            if (isFragmentVisible) {
+//                if(it){
+//                   isConnection = true
+//                    viewModel.getAllPosts()
+//                    Toast.makeText(requireContext(), isConnection.toString(), Toast.LENGTH_SHORT).show()
+//                }else{
+//                   isConnection = false
+//                    Toast.makeText(requireContext(), isConnection.toString(), Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
